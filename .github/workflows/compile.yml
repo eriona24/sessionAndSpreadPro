@@ -13,8 +13,9 @@ jobs:
 
       - name: Compile Indicator
         run: |
-          .\metaeditor64.exe /compile:"SessionAndSpreadPro.mq5" /log:"compile.log"
-          Get-Content "compile.log"
+          Start-Process -FilePath ".\metaeditor64.exe" -ArgumentList '/portable /compile:"SessionAndSpreadPro.mq5" /log:"compile.log"' -Wait
+          if (Test-Path "compile.log") { Get-Content "compile.log" }
+          if (-not (Test-Path "SessionAndSpreadPro.ex5")) { exit 1 }
 
       - name: Upload EX5 File
         uses: actions/upload-artifact@v4
