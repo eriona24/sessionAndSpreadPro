@@ -7,11 +7,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Folders & Download MetaEditor
+      - name: Install Official MT5 & MetaEditor
         run: |
+          Invoke-WebRequest -Uri "https://mql5.com" -OutFile "mt5setup.exe"
+          Start-Process -FilePath ".\mt5setup.exe" -ArgumentList "/auto" -Wait
+          $me = Get-ChildItem -Path "C:\Program Files" -Filter "metaeditor64.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          Copy-Item $me.FullName -Destination ".\metaeditor64.exe"
           New-Item -ItemType Directory -Force -Path "MQL5\Indicators"
           Copy-Item "SessionAndSpreadPro.mq5" -Destination "MQL5\Indicators\SessionAndSpreadPro.mq5"
-          Invoke-WebRequest -Uri "https://mql5.com" -OutFile "metaeditor64.exe"
 
       - name: Compile Indicator
         run: |
