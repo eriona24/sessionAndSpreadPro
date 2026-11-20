@@ -7,18 +7,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download Official MetaEditor 64
+      - name: Setup Folders & Download MetaEditor
         run: |
+          New-Item -ItemType Directory -Force -Path "MQL5\Indicators"
+          Copy-Item "SessionAndSpreadPro.mq5" -Destination "MQL5\Indicators\SessionAndSpreadPro.mq5"
           Invoke-WebRequest -Uri "https://mql5.com" -OutFile "metaeditor64.exe"
 
       - name: Compile Indicator
         run: |
-          Start-Process -FilePath ".\metaeditor64.exe" -ArgumentList '/portable /compile:"SessionAndSpreadPro.mq5" /log:"compile.log"' -Wait
-          if (Test-Path "compile.log") { Get-Content "compile.log" }
-          if (-not (Test-Path "SessionAndSpreadPro.ex5")) { exit 1 }
+          Start-Process -FilePath ".\metaeditor64.exe" -ArgumentList '/portable /compile:"MQL5\Indicators\SessionAndSpreadPro.mq5" /log:"compile.log"' -Wait
+          if (Test-Path "compile.log") { Get-Content "compile.log" -Encoding Unicode }
+          if (-not (Test-Path "MQL5\Indicators\SessionAndSpreadPro.ex5")) { exit 1 }
 
       - name: Upload EX5 File
         uses: actions/upload-artifact@v4
         with:
           name: SessionAndSpreadPro-EX5
-          path: SessionAndSpreadPro.ex5
+          path: MQL5\Indicators\SessionAndSpreadPro.ex5
