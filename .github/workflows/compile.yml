@@ -1,4 +1,4 @@
-name: Compile MQL5
+name: Compile MQL5 Direct
 on: [push]
 jobs:
   build:
@@ -7,11 +7,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Compile MQL5 Indicator
-        uses: FX31337/MQL-Compile-action@master
-        with:
-          lang: mql5
-          path: ${{ github.workspace }}\SessionAndSpreadPro.mq5
+      - name: Download Official MetaEditor 64
+        run: |
+          Invoke-WebRequest -Uri "https://mql5.com" -OutFile "metaeditor64.exe"
+
+      - name: Compile Indicator
+        run: |
+          .\metaeditor64.exe /compile:"SessionAndSpreadPro.mq5" /log:"compile.log"
+          Get-Content "compile.log"
 
       - name: Upload EX5 File
         uses: actions/upload-artifact@v4
