@@ -4,23 +4,6 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Compile MQL5 Indicator
-        uses: FX31337/MQL-Compile-action@master
-        with:
-          path: SessionAndSpreadPro.mq5
-      - name: Upload EX5 File
-        uses: actions/upload-artifact@v4
-        with:
-          name: SessionAndSpreadPro-EX5
-          path: SessionAndSpreadPro.ex5
-Eriiona
-name: Compile MQL5
-on: [push]
-jobs:
-  build:
-    runs-on: windows-latest
-    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
